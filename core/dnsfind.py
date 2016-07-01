@@ -2,13 +2,14 @@
 
 import socket, gevent, os
 from gevent.pool import Pool
-from core.utils import findreport
+from core.utils import findreport, FindObj
 
 class DnsFind:
 
 	def __init__(self,options):
 		self.options = options
 		self.blockip = None
+		self.keywords = False
 		self.pool = Pool(self.options['threads_count'])
 		self.document = self.options['target'].replace('.','_')+'.txt'
 		socket.setdefaulttimeout(self.options['timeout'])
@@ -22,14 +23,30 @@ class DnsFind:
 			results = None
 		finally:
 			if results is not None and mode != 'block':
-				print '\033[1;32;40m[*] Domain alive: %s => %s !! \033[0m' % (domain,results) 
+
+				# 识别指纹
+				if self.options['finger']:
+					domain_finger = FindObj(domain).findfinger()
+					print '\033[1;32;40m[*] Domain alive: %s => %s => %s!! \033[0m' % (domain,results,domain_finger) 
+				else:
+					print '\033[1;32;40m[*] Domain alive: %s => %s!! \033[0m' % (domain,results)
+
+				# 页面关键字搜索
+				if self.options['keywords']:
+					for _keyword in self.options['keywords']:
+						if FindObj(domain,_keyword).findcontent():							
+							self.keywords = True
+
 				ipgroup = results.split('.')
 				data = [results,'.'.join(ipgroup[:3])]
 
 				# 存储结果
-				report = open('result/'+self.document,'a+')
-				report.write(domain+'\n')
-				report.close()
+				# 第一种，激活了关键字筛选且有关键字匹配，则存储。
+				# 第二种，没有激活关键字，存储
+				if self.options['keywords'] is not None and self.keywords == True or self.options['keywords'] is None:
+					report = open('result/'+self.document,'a+')
+					report.write(domain+'\n')
+					report.close()
 			else:
 				data = None
 

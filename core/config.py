@@ -1,7 +1,7 @@
 #coding:utf-8
-import os
+import os, sys
 
-version = 'V1.0'
+version = 'V1.1'
 author = 'Smarttang'
 
 def init_option(keys):
@@ -9,11 +9,19 @@ def init_option(keys):
 		'timeout': check_time(keys.timeout),
 		'target': check_target(keys.target),
 		'dictname': check_dictname(keys.dictname),
-		'threads_count': check_threads(keys.threads_count)
+		'threads_count': check_threads(keys.threads_count),
+		'finger':keys.finger,
+		'keywords':check_keywords(keys.keywords)
 	}
-
 	return vardict
 
+
+# 检查关键字
+def check_keywords(val):
+	if val:
+		return val.split(',')
+	else:
+		return None
 
 # 最高设置为超时10
 def check_time(val):
