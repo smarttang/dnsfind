@@ -25,7 +25,7 @@ class FindObj:
 			
 	def _getrequest(self):
 		try:
-			self.response = requests.get(target)
+			self.response = requests.get('http://'+target)
 		except:
 			pass
 
@@ -43,10 +43,11 @@ class FindObj:
 	def findcontent(self):
 		self._getrequest()
 
-		content = ''.join([con.strip() for con in self.response.content.split('\n')])
+		if self.response:
+			content = ''.join([con.strip() for con in self.response.content.split('\n')])
 
-		if self.keyword:
-			for keyword_item in self.keyword:
-				if content.find(keyword_item) != -1:
-					return True
+			if self.keyword:
+				for keyword_item in self.keyword:
+					if content.find(keyword_item) != -1:
+						return True
 		return False
