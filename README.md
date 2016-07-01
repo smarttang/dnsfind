@@ -1,5 +1,7 @@
 # DnsFind 域名穷举工具
 
+[![Python 2.6|2.7](https://img.shields.io/badge/python-2.6|2.7-yellow.svg)](https://www.python.org/)
+
 ```
     ____             _______           __
    / __ \____  _____/ ____(_)___  ____/ /
