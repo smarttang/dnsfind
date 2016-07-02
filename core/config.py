@@ -1,5 +1,5 @@
 #coding:utf-8
-import os, sys
+import os
 
 version = 'V1.1'
 author = 'Smarttang'

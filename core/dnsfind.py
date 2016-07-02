@@ -2,7 +2,7 @@
 
 import socket, gevent, os
 from gevent.pool import Pool
-from core.utils import findreport, FindObj
+from core.utils import findreport, FindObj, getpath
 
 class DnsFind:
 
@@ -44,7 +44,7 @@ class DnsFind:
 				# 第一种，激活了关键字筛选且有关键字匹配，则存储。
 				# 第二种，没有激活关键字，存储
 				if self.options['keywords'] is not None and self.keywords == True or self.options['keywords'] is None:
-					report = open('result/'+self.document,'a+')
+					report = open(getpath()+'/result/'+self.document,'a+')
 					report.write(domain+'\n')
 					report.close()
 			else:
@@ -69,6 +69,6 @@ class DnsFind:
 			self.blockip = block_check_results[0]
 
 		# 构建字典
-		dic_list = (dic.strip('\n')+'.'+self.options['target'] for dic in open(self.options['dictname'],'r'))
+		dic_list = (dic.strip('\n')+'.'+self.options['target'] for dic in open(getpath() + '/' +self.options['dictname'],'r'))
 		# 协程爆破测试
 		self.pool.map(self.checkdomain,dic_list)
